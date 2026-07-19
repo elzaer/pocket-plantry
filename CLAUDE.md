@@ -12,7 +12,7 @@ Read those three files before making architectural changes — they contain the 
 ## Stack
 
 - **Backend**: PocketBase (single binary, embedded SQLite, built-in auth + realtime subscriptions + admin UI). Not Supabase/Postgres — deliberately kept lightweight for a two-user household deployment. Migration path to Postgres exists later if needed; don't design around that possibility prematurely.
-- **Frontend**: [decide and fill in — plain JS or a framework]
+- **Frontend**: React + Vite (SPA). Uses the PocketBase JS SDK directly from the client for auth, data, and realtime subscriptions — no separate backend-for-frontend layer.
 - **Hosting**: existing home Linux server, new subdomain, Caddy (or existing Nginx + certbot) reverse proxy, Let's Encrypt HTTPS.
 - **Auth**: PocketBase's built-in auth, two user accounts under one household.
 
@@ -39,7 +39,12 @@ Follow the sequencing in `pantry_app_roadmap.md`. Epic 0 (product resolution + g
 
 ## Conventions
 
-- [fill in: code style, testing approach, commit conventions as they're established]
+Starting defaults — adjust once real code exists, this isn't meant to be fixed in stone:
+
+- Functional components + hooks only, no class components.
+- ESLint (recommended config + `eslint-plugin-react-hooks`) and Prettier, defaults unless a specific rule causes friction.
+- Vitest + React Testing Library for tests.
+- Conventional commits (`feat:`, `fix:`, `chore:`, etc).
 
 ## Non-negotiables
 
