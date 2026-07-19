@@ -87,3 +87,10 @@ nav button[aria-current="true"] {
   padding: 8px 0;
   border-bottom: 1px solid var(--border);
 }
+
+.meal-card {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
