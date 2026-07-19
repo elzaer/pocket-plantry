@@ -10,6 +10,8 @@ migrate((app) => {
         required: true,
         max: 100,
       },
+      { name: "created", type: "autodate", onCreate: true },
+      { name: "updated", type: "autodate", onCreate: true, onUpdate: true },
     ],
     // Household membership is set up by an admin (there's only ever one
     // household today) — no client create/update/delete rule.

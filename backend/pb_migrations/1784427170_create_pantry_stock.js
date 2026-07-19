@@ -45,6 +45,8 @@ migrate((app) => {
         maxSelect: 1,
         values: ["scan", "receipt_import", "manual_adjustment"],
       },
+      { name: "created", type: "autodate", onCreate: true },
+      { name: "updated", type: "autodate", onCreate: true, onUpdate: true },
     ],
     indexes: [
       "CREATE UNIQUE INDEX idx_pantry_stock_household_item ON pantry_stock (household, generic_item)",

@@ -36,6 +36,8 @@ migrate((app) => {
         name: "is_recurring",
         type: "bool",
       },
+      { name: "created", type: "autodate", onCreate: true },
+      { name: "updated", type: "autodate", onCreate: true, onUpdate: true },
     ],
     indexes: [
       "CREATE INDEX idx_generic_items_household ON generic_items (household)",

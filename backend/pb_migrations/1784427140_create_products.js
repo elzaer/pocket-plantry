@@ -59,6 +59,8 @@ migrate((app) => {
         name: "contributed_to_off",
         type: "bool",
       },
+      { name: "created", type: "autodate", onCreate: true },
+      { name: "updated", type: "autodate", onCreate: true, onUpdate: true },
     ],
     indexes: [
       "CREATE UNIQUE INDEX idx_products_barcode ON products (barcode)",

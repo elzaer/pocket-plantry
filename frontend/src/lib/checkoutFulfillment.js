@@ -1,4 +1,5 @@
 import { pb } from "./pocketbase";
+import { upsertPantryStock } from "./pantryStock";
 
 async function getFirstOrNull(collection, filter) {
   try {
@@ -28,28 +29,13 @@ export async function logCheckoutScan({ householdId, genericItemId, productId })
     });
   }
 
-  const stock = await getFirstOrNull(
-    "pantry_stock",
-    pb.filter("household = {:h} && generic_item = {:g}", {
-      h: householdId,
-      g: genericItemId,
-    }),
-  );
-  if (stock) {
-    await pb.collection("pantry_stock").update(stock.id, {
-      product: productId,
-      has_stock: true,
-      source: "scan",
-    });
-  } else {
-    await pb.collection("pantry_stock").create({
-      household: householdId,
-      generic_item: genericItemId,
-      product: productId,
-      has_stock: true,
-      source: "scan",
-    });
-  }
+  await upsertPantryStock({
+    householdId,
+    genericItemId,
+    productId,
+    hasStock: true,
+    source: "scan",
+  });
 
   return { fulfilledListItem: Boolean(openListItem) };
 }

@@ -32,6 +32,8 @@ migrate((app) => {
         maxSelect: 1,
         cascadeDelete: false,
       },
+      { name: "created", type: "autodate", onCreate: true },
+      { name: "updated", type: "autodate", onCreate: true, onUpdate: true },
     ],
     indexes: [
       "CREATE UNIQUE INDEX idx_household_preferences_household_item ON household_preferences (household, generic_item)",

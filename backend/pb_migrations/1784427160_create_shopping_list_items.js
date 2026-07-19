@@ -51,6 +51,8 @@ migrate((app) => {
         name: "fulfilled_at",
         type: "date",
       },
+      { name: "created", type: "autodate", onCreate: true },
+      { name: "updated", type: "autodate", onCreate: true, onUpdate: true },
     ],
     indexes: [
       "CREATE UNIQUE INDEX idx_shopping_list_open_item ON shopping_list_items (household, generic_item) WHERE status = 'open'",
