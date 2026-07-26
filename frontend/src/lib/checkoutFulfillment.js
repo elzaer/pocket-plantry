@@ -13,7 +13,7 @@ async function getFirstOrNull(collection, filter) {
 // Epic 0's checkout story: a scanned product resolves to its generic item,
 // marks any matching open shopping list entry fulfilled, and always logs
 // to pantry stock (CLAUDE.md / ROADMAP.md).
-export async function logCheckoutScan({ householdId, genericItemId, productId }) {
+export async function logFulfillment({ householdId, genericItemId, productId, source = "scan" }) {
   const openListItem = await getFirstOrNull(
     "shopping_list_items",
     pb.filter("household = {:h} && generic_item = {:g} && status = 'open'", {
@@ -34,7 +34,7 @@ export async function logCheckoutScan({ householdId, genericItemId, productId })
     genericItemId,
     productId,
     hasStock: true,
-    source: "scan",
+    source,
   });
 
   return { fulfilledListItem: Boolean(openListItem) };
