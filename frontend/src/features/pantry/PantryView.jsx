@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { fetchPantryStock, upsertPantryStock } from "../../lib/pantryStock";
+import { fetchPantryCatalog, upsertPantryStock } from "../../lib/pantryStock";
 import { resolveGenericItemId } from "../../lib/genericItems";
 import { GenericItemPicker } from "../../components/GenericItemPicker";
 
 export function PantryView({ householdId }) {
-  const [stock, setStock] = useState(null);
+  const [catalog, setCatalog] = useState(null);
   const [error, setError] = useState(null);
   const [picked, setPicked] = useState(null);
   const [adding, setAdding] = useState(false);
@@ -12,9 +12,9 @@ export function PantryView({ householdId }) {
 
   useEffect(() => {
     let cancelled = false;
-    fetchPantryStock(householdId)
+    fetchPantryCatalog(householdId)
       .then((data) => {
-        if (!cancelled) setStock(data);
+        if (!cancelled) setCatalog(data);
       })
       .catch((err) => {
         if (!cancelled) setError(err.message || "Couldn't load pantry stock");
@@ -24,13 +24,13 @@ export function PantryView({ householdId }) {
     };
   }, [householdId, reloadKey]);
 
-  async function toggleStock(row) {
+  async function toggleStock(item) {
     setError(null);
     try {
       await upsertPantryStock({
         householdId,
-        genericItemId: row.generic_item,
-        hasStock: !row.has_stock,
+        genericItemId: item.genericItemId,
+        hasStock: !item.hasStock,
         source: "manual_adjustment",
       });
       setReloadKey((k) => k + 1);
@@ -66,14 +66,14 @@ export function PantryView({ householdId }) {
       <h1>Pantry</h1>
       {error && <p role="alert">{error}</p>}
 
-      {stock === null && <p>Loading…</p>}
-      {stock?.length === 0 && <p>Nothing tracked yet.</p>}
-      {stock?.map((row) => (
-        <div key={row.id} className="pantry-row">
-          <span>{row.expand?.generic_item?.name || "Unknown item"}</span>
-          <span>{row.has_stock ? "In stock" : "Out of stock"}</span>
-          <button type="button" onClick={() => toggleStock(row)}>
-            Mark {row.has_stock ? "out of stock" : "in stock"}
+      {catalog === null && <p>Loading…</p>}
+      {catalog?.length === 0 && <p>No generic items yet — add one below.</p>}
+      {catalog?.map((item) => (
+        <div key={item.genericItemId} className="pantry-row">
+          <span>{item.name}</span>
+          <span>{item.hasStock ? "In stock" : "Out of stock"}</span>
+          <button type="button" onClick={() => toggleStock(item)}>
+            Mark {item.hasStock ? "out of stock" : "in stock"}
           </button>
         </div>
       ))}
