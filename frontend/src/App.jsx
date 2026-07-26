@@ -3,12 +3,14 @@ import { useAuth } from "./hooks/useAuth";
 import { LoginForm } from "./components/LoginForm";
 import { ResolveFlow } from "./features/resolve/ResolveFlow";
 import { PantryView } from "./features/pantry/PantryView";
+import { RequirementsView } from "./features/requirements/RequirementsView";
 import { ShoppingListView } from "./features/shoppingList/ShoppingListView";
 import { PlannerView } from "./features/planner/PlannerView";
 
 const TABS = [
   { key: "scan", label: "Scan", render: ResolveFlow },
   { key: "pantry", label: "Pantry", render: PantryView },
+  { key: "requirements", label: "Requirements", render: RequirementsView },
   { key: "list", label: "List", render: ShoppingListView },
   { key: "planner", label: "Planner", render: PlannerView },
 ];
