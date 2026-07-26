@@ -13,3 +13,4 @@ The UI for the meals is date driven, currently I have it setup for a week in adv
 - The "list" tab (which should be used for when shopping) should be alphabetical
 - function to tag a meal as "made / completed" so it doesn't trigger any stock requirement overlap for a midweek shop
 - Add stock level function as "low stock" meaning probably enough to get through this week, but needs to be topped up on the list if it is a required item.  As in there is enough to fill the weeks requirements, including the meals planned requiring that, but it will be needed come end of week
+- Scan tab probably should have a list of locally known products / items.  I was thinking an extra tab, but the scan tab can probably be transformed into a products tab where all the scan functions are performed from
