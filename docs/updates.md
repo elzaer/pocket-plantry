@@ -10,4 +10,5 @@ The UI for the meals is date driven, currently I have it setup for a week in adv
 - Potentially add an extra field(s) against generic items for where they are known to be available from
 - List should automatically populate with current list of requirements that aren't in stock, as well as ingredients list from meal planner
 - track frequency of purchase to be able to filter out common items from uncommon, novelty or one-off items
-- The "list" tab (which should be used for when shopping) should be alphabetical 
+- The "list" tab (which should be used for when shopping) should be alphabetical
+- function to tag a meal as "made / completed" so it doesn't trigger any stock requirement overlap for a midweek shop
