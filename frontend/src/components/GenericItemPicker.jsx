@@ -1,26 +1,40 @@
-import { useEffect, useState } from "react";
-import { fetchGenericItems } from "../lib/genericItems";
+import { useEffect, useId, useState } from "react";
+import { fetchGenericItems, normalizeGenericItemName } from "../lib/genericItems";
 
 // Free-text input backed by a datalist of the household's existing generic
-// items. Typing an exact (case-insensitive) match selects it; anything else
-// is treated as a new generic item to create on submit.
+// items. Typing a match (case/whitespace/simple-plural-insensitive — see
+// normalizeGenericItemName) selects it; anything else is treated as a new
+// generic item to create on submit.
 export function GenericItemPicker({ householdId, value, onChange }) {
   const [items, setItems] = useState([]);
+  const datalistId = useId();
 
+  // PocketBase auto-cancels an in-flight request when another request to the
+  // same collection+method fires before it resolves (cancel key doesn't
+  // consider filters). Multiple pickers can mount at once (one per meal in
+  // the planner), so each needs its own requestKey to avoid cancelling its
+  // siblings' fetches.
   useEffect(() => {
     let cancelled = false;
-    fetchGenericItems(householdId).then((list) => {
-      if (!cancelled) setItems(list);
-    });
+    fetchGenericItems(householdId, { requestKey: `generic-items-picker-${datalistId}` })
+      .then((list) => {
+        if (!cancelled) setItems(list);
+      })
+      .catch((err) => {
+        if (!cancelled && !err?.isAbort) {
+          console.error("Couldn't load generic items", err);
+        }
+      });
     return () => {
       cancelled = true;
     };
-  }, [householdId]);
+  }, [householdId, datalistId]);
 
   function handleInput(e) {
     const text = e.target.value;
+    const normalized = normalizeGenericItemName(text);
     const match = items.find(
-      (item) => item.name.toLowerCase() === text.toLowerCase(),
+      (item) => normalizeGenericItemName(item.name) === normalized,
     );
     onChange(
       match
@@ -33,13 +47,13 @@ export function GenericItemPicker({ householdId, value, onChange }) {
     <label>
       Generic item
       <input
-        list="generic-items-datalist"
+        list={datalistId}
         value={value?.name ?? ""}
         onChange={handleInput}
         placeholder="e.g. Peanut butter"
         required
       />
-      <datalist id="generic-items-datalist">
+      <datalist id={datalistId}>
         {items.map((item) => (
           <option key={item.id} value={item.name} />
         ))}
