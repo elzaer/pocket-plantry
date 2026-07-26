@@ -20,6 +20,26 @@ export function normalizeGenericItemName(name) {
   return s;
 }
 
+// Requirements list (Epic 2) — the household's generic items currently
+// flagged is_recurring. No separate table: DB.md's deliberate choice to
+// keep this the simplest shape until the receipt-import stretch goal (not
+// in scope) needs more than a flag.
+export async function fetchRequirements(householdId) {
+  return pb.collection("generic_items").getFullList({
+    filter: pb.filter("household = {:h} && is_recurring = true", { h: householdId }),
+    sort: "name",
+  });
+}
+
+// Toggles membership on the requirements list. Never deletes the
+// generic_items record — pantry_stock, meal_items, etc. may still
+// reference it independently of this flag.
+export async function setGenericItemRecurring(genericItemId, isRecurring) {
+  return pb.collection("generic_items").update(genericItemId, {
+    is_recurring: isRecurring,
+  });
+}
+
 async function findMatchingGenericItem(householdId, name) {
   const normalized = normalizeGenericItemName(name);
   const items = await fetchGenericItems(householdId);
