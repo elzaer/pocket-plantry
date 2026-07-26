@@ -12,4 +12,4 @@ The UI for the meals is date driven, currently I have it setup for a week in adv
 - track frequency of purchase to be able to filter out common items from uncommon, novelty or one-off items
 - The "list" tab (which should be used for when shopping) should be alphabetical
 - function to tag a meal as "made / completed" so it doesn't trigger any stock requirement overlap for a midweek shop
-- Add stock level function as "low stock" meaning probably enough to get through this week, but needs to be topped up on the list.  As in there is enough to fill hte weeks requirements, including the meals planned requiring that, but it will be needed come end of week
+- Add stock level function as "low stock" meaning probably enough to get through this week, but needs to be topped up on the list if it is a required item.  As in there is enough to fill the weeks requirements, including the meals planned requiring that, but it will be needed come end of week
