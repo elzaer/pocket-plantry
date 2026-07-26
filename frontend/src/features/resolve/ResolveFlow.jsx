@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { resolveBarcode } from "../../lib/resolveProduct";
-import { logCheckoutScan } from "../../lib/checkoutFulfillment";
+import { logFulfillment } from "../../lib/checkoutFulfillment";
 import { BarcodeInput } from "./BarcodeInput";
 import { GenericItemMapper } from "./GenericItemMapper";
 import { ManualEntryForm } from "./ManualEntryForm";
@@ -38,10 +38,11 @@ export function ResolveFlow({ householdId }) {
   async function handleLogToPantry(product) {
     setCheckoutResult({ status: "logging" });
     try {
-      const result = await logCheckoutScan({
+      const result = await logFulfillment({
         householdId,
         genericItemId: product.generic_item,
         productId: product.id,
+        source: "scan",
       });
       setCheckoutResult({ status: "done", ...result });
     } catch (err) {

@@ -6,9 +6,11 @@ import { PantryView } from "./features/pantry/PantryView";
 import { RequirementsView } from "./features/requirements/RequirementsView";
 import { ShoppingListView } from "./features/shoppingList/ShoppingListView";
 import { PlannerView } from "./features/planner/PlannerView";
+import { ReceiptImportView } from "./features/receipts/ReceiptImportView";
 
 const TABS = [
   { key: "scan", label: "Scan", render: ResolveFlow },
+  { key: "receipts", label: "Receipts", render: ReceiptImportView },
   { key: "pantry", label: "Pantry", render: PantryView },
   { key: "requirements", label: "Requirements", render: RequirementsView },
   { key: "list", label: "List", render: ShoppingListView },
