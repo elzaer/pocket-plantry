@@ -1,10 +1,32 @@
 import { pb } from "./pocketbase";
+import { fetchGenericItems } from "./genericItems";
 
 export async function fetchPantryStock(householdId) {
   return pb.collection("pantry_stock").getFullList({
     filter: pb.filter("household = {:h}", { h: householdId }),
     expand: "generic_item,product",
     sort: "-updated",
+  });
+}
+
+// Full-catalog view for Epic 3's "walk the pantry" pass: every generic item
+// the household tracks, merged with its pantry_stock row if one exists.
+// Items never scanned/adjusted default to hasStock: false — this is what
+// makes "reliably reflects has/doesn't-have for EVERY generic item" true
+// structurally, instead of only showing items that already have a row.
+export async function fetchPantryCatalog(householdId) {
+  const [items, stockRows] = await Promise.all([
+    fetchGenericItems(householdId),
+    fetchPantryStock(householdId),
+  ]);
+  const stockByItem = new Map(stockRows.map((row) => [row.generic_item, row]));
+  return items.map((item) => {
+    const stock = stockByItem.get(item.id);
+    return {
+      genericItemId: item.id,
+      name: item.name,
+      hasStock: stock?.has_stock ?? false,
+    };
   });
 }
 
