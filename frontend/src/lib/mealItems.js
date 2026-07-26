@@ -24,9 +24,9 @@ export async function removeMealItem(mealItemId) {
 }
 
 // Epic 1 acceptance: a saved meal plan can be reduced to a flat list of
-// generic item ids needed for the week.
-export async function fetchWeeklyGenericItems(mealPlanId) {
-  const items = await fetchMealItemsForPlan(mealPlanId);
+// generic item ids needed for the week. Takes the meal_items already fetched
+// by fetchMealItemsForPlan rather than re-fetching them.
+export function weeklyGenericItemsFrom(items) {
   const seen = new Map();
   for (const item of items) {
     if (item.expand?.generic_item) {

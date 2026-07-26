@@ -45,6 +45,8 @@ Note: if using PocketBase, its built-in auth collection likely covers most of th
 | is_recurring | boolean, default false | marks it as part of the Epic 2 requirements list |
 | created_at | timestamp | |
 
+Constraint: unique on (`household_id`, `name`) case-insensitive — prevents the same ingredient (e.g. "Broccoli") getting created twice from different pickers. App code also re-checks against the household's current items (case/whitespace/simple-plural-insensitive) before creating, since the unique index alone won't catch things like "Broccoli " vs "Broccoli" or "carrot" vs "carrots".
+
 ### `products`
 | Field | Type | Notes |
 |---|---|---|

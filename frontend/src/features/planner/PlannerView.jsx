@@ -5,7 +5,7 @@ import {
   fetchMealItemsForPlan,
   addMealItem,
   removeMealItem,
-  fetchWeeklyGenericItems,
+  weeklyGenericItemsFrom,
 } from "../../lib/mealItems";
 import { resolveGenericItemId } from "../../lib/genericItems";
 import { GenericItemPicker } from "../../components/GenericItemPicker";
@@ -31,20 +31,18 @@ export function PlannerView({ householdId }) {
     let cancelled = false;
     fetchOrCreateMealPlan(householdId, weekStart)
       .then((plan) =>
-        Promise.all([
-          fetchMeals(plan.id),
-          fetchMealItemsForPlan(plan.id),
-          fetchWeeklyGenericItems(plan.id),
-        ]).then(([meals, items, weeklyItems]) => {
-          if (cancelled) return;
-          const itemsByMeal = new Map();
-          for (const item of items) {
-            const list = itemsByMeal.get(item.meal) || [];
-            list.push(item);
-            itemsByMeal.set(item.meal, list);
-          }
-          setData({ plan, meals, itemsByMeal, weeklyItems });
-        }),
+        Promise.all([fetchMeals(plan.id), fetchMealItemsForPlan(plan.id)]).then(
+          ([meals, items]) => {
+            if (cancelled) return;
+            const itemsByMeal = new Map();
+            for (const item of items) {
+              const list = itemsByMeal.get(item.meal) || [];
+              list.push(item);
+              itemsByMeal.set(item.meal, list);
+            }
+            setData({ plan, meals, itemsByMeal, weeklyItems: weeklyGenericItemsFrom(items) });
+          },
+        ),
       )
       .catch((err) => {
         if (!cancelled) setError(err.message || "Couldn't load meal plan");
